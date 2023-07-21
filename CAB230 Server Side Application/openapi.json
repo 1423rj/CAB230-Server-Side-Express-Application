@@ -1,0 +1,1521 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Movie API - n10869069",
+        "description": "This API provides access to publicly available data on a limited number of movies published from the year 1990 from the Internet Movie Database and other sources. The API endpoints and their usage are described in detail below.",
+        "version": "1.0.0",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "n10869069@qut.edu.au"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "Enter JWT Bearer token **_only_**"
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "query",
+            "description": "API queries based on Movies."
+        }
+    ],
+    "paths": {
+        "/movies/search": {
+            "get": {
+              "tags": [
+                "Movies"
+              ],
+              "summary": "Search movies",
+              "description": "Retrieves movies based on search inputs",
+              "operationId": "searchMovies",
+              "parameters": [
+                {
+                  "name": "year",
+                  "in": "query",
+                  "description": "The year to search movies for",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "page",
+                  "in": "query",
+                  "description": "The page to search movies for",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "title",
+                  "in": "query",
+                  "description": "The title to search movies for",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "produces": [
+                "application/json"
+              ],
+              "responses": {
+                "200": {
+                  "description": "Successful operation",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "Error": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          },
+                          "Message": {
+                            "type": "string",
+                            "enum": [
+                              "Success"
+                            ]
+                          },
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "example": "Star Trek: First Contact"
+                                },
+                                "year": {
+                                  "type": "integer",
+                                  "example": 1996
+                                },
+                                "imdbID": {
+                                  "type": "string",
+                                  "example": "tt0117731"
+                                },
+                                "imdbRating": {
+                                  "type": "number",
+                                  "example": 7.6
+                                },
+                                "rottenTomatoesRating": {
+                                  "type": "number",
+                                  "example": 92
+                                },
+                                "metacriticRating": {
+                                  "type": "number",
+                                  "example": 71
+                                },
+                                "classification": {
+                                  "type": "string",
+                                  "example": "PG-13"
+                                }
+                              }
+                            }
+                          },
+                          "pagination": {
+                            "type": "object",
+                            "properties": {
+                              "total": {
+                                "type": "integer",
+                                "example": 71
+                              },
+                              "lastPage": {
+                                "type": "integer",
+                                "example": 7
+                              },
+                              "perPage": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "currentPage": {
+                                "type": "integer",
+                                "example": 2
+                              },
+                              "from": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "to": {
+                                "type": "integer",
+                                "example": 7
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Invalid year query parameter. Click on 'Schema' below to see the possible error responses.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "Error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "Message": {
+                            "type": "string",
+                            "example": "Invalid year format. Format must be yyyy."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "Internal server error",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "Error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "Message": {
+                            "type": "string",
+                            "example": "Error in MySQL query"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ,
+        "/people/{id}": {
+            "get": {
+              "tags": [
+                "People"
+              ],
+              "summary": "Get Person Details",
+              "description": "Retrieves details of a person based on their ID.",
+              "operationId": "getPersonDetails",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "description": "The person's IMDB ID",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Success",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "birthYear": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "deathYear": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "roles": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "movieName": {
+                                  "type": "string"
+                                },
+                                "movieId": {
+                                  "type": "string"
+                                },
+                                "category": {
+                                  "type": "string"
+                                },
+                                "characters": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "imdbRating": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "name": "Patrick Stewart",
+                        "birthYear": 1940,
+                        "deathYear": null,
+                        "roles": [
+                          {
+                            "movieName": "Star Trek: First Contact",
+                            "movieId": "tt0117731",
+                            "category": "Actor",
+                            "characters": [
+                              "Picard"
+                            ],
+                            "imdbRating": 7.6
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Invalid query parameters. Click on 'Schema' to see possible error responses.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": {
+                        "error": true,
+                        "message": "Invalid query parameters: year. Query parameters are not permitted."
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Unauthorized. Click on 'Examples' below to see the possible error responses.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "examples": {
+                        "missingAuthHeader": {
+                          "value": {
+                            "error": true,
+                            "message": "Missing Authorization header"
+                          }
+                        },
+                        "invalidToken": {
+                          "value": {
+                            "error": true,
+                            "message": "Invalid JWT token"
+                          }
+                        },
+                        "expiredToken": {
+                          "value": {
+                            "error": true,
+                            "message": "Expired JWT token"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "Not Found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": {
+                        "error": true,
+                        "message": "Person not found"
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "Internal server error",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+        "/user/{email}/profile": {
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update User Profile",
+                "description": "Updates the profile information of a user based on their email.",
+                "operationId": "updateUserProfile",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "User email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string"
+                                    },
+                                    "lastName": {
+                                        "type": "string"
+                                    },
+                                    "dob": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "firstName": "John",
+                                    "lastName": "Doe",
+                                    "dob": "1990-01-01",
+                                    "address": "123 Street, City"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "firstName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type": "string"
+                                        },
+                                        "dob": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "email": "mike@gmail.com",
+                                    "firstName": "Michael",
+                                    "lastName": "Jordan",
+                                    "dob": "1963-02-17",
+                                    "address": "123 Fake Street, Springfield"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters. Click on 'Examples' to see possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "invalidInput": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Invalid input: dob must be a real date in format YYYY-MM-DD."
+                                        }
+                                    },
+                                    "missingFields": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Request body incomplete: firstName, lastName, dob, and address are required."
+                                        }
+                                    },
+                                    "invalidType": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Request body invalid: firstName, lastName, and address must be strings only."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "invalidToken": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Invalid JWT token"
+                                        }
+                                    },
+                                    "authorizationHeaderMalformed": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Authorization header is malformed"
+                                        }
+                                    },
+                                    "expiredToken": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "JWT token has expired"
+                                        }
+                                    },
+                                    "authorizationHeaderMissing": {
+                                        "value": {
+                                            "error": true,
+                                            "message": "Authorization header ('Bearer token') not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": true,
+                                    "message": "Forbidden"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "Error": {
+                                  "type": "boolean",
+                                  "enum": [
+                                    true
+                                  ]
+                                },
+                                "Message": {
+                                  "type": "string",
+                                  "example": "Error in MySQL query"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get User Profile",
+                "description": "Retrieves the profile information of a user based on their email.",
+                "operationId": "getUserProfile",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "User email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK, View examples for all responses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "firstName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type": "string"
+                                        },
+                                        "dob": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Authenticated": {
+                                        "value": {
+                                            "email": "mike@gmail.com",
+                                            "firstName": "Michael",
+                                            "lastName": "Jordan",
+                                            "dob": "1963-02-17",
+                                            "address": "123 Fake Street, Springfield"
+                                        }
+                                    },
+                                    "newUser": {
+                                        "value": {
+                                            "email": "mike@gmail.com",
+                                            "firstName": null,
+                                            "lastName": null,
+                                            "dob": null,
+                                            "address": null
+                                        }
+                                    },
+                                    "Not-Authenticated": {
+                                        "value": {
+                                            "email": "mike@gmail.com",
+                                            "firstName": "Michael",
+                                            "lastName": "Jordan"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "examples": {
+                                        "expiredToken": {
+                                            "value": {
+                                                "error": true,
+                                                "message": "JWT token has expired"
+                                            }
+                                        },
+                                        "invalidToken": {
+                                            "value": {
+                                                "error": true,
+                                                "message": "Invalid JWT token"
+                                            }
+                                        },
+                                        "malformedHeader": {
+                                            "value": {
+                                                "error": true,
+                                                "message": "Authorization header is malformed"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": true,
+                                    "message": "User not found"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "Error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "Message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "Error": true,
+                                    "Message": "Error in MySQL query"
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        },
+        "/movies/data/{imdbID}": {
+            "get": {
+              "tags": [
+                "Movies"
+              ],
+              "summary": "Get movie details by IMDb ID",
+              "description": "Retrieves movie details based on the provided IMDb ID.",
+              "operationId": "getMovieDetails",
+              "parameters": [
+                {
+                  "name": "imdbID",
+                  "in": "path",
+                  "description": "The IMDb ID of the movie",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Successful operation",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "example": "Star Trek: First Contact"
+                          },
+                          "year": {
+                            "type": "integer",
+                            "example": 1996
+                          },
+                          "runtime": {
+                            "type": "integer",
+                            "example": 111
+                          },
+                          "genres": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "country": {
+                            "type": "string",
+                            "example": "United States"
+                          },
+                          "principals": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "example": "nm0005772"
+                                },
+                                "category": {
+                                  "type": "string",
+                                  "example": "cinematographer"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "example": "Matthew F. Leonetti"
+                                },
+                                "characters": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ratings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "source": {
+                                  "type": "string",
+                                  "example": "Internet Movie Database"
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "example": 7.6
+                                }
+                              }
+                            }
+                          },
+                          "boxoffice": {
+                            "type": "string",
+                            "example": "92027888"
+                          },
+                          "poster": {
+                            "type": "string",
+                            "example": "https://m.media-amazon.com/images/M/MV5BYzMzZmE3MTItODYzYy00YWI5LWFkNWMtZTY5NmU2MDkxYWI1XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_SX300.jpg"
+                          },
+                          "plot": {
+                            "type": "string",
+                            "example": "The Borg travel back in time intent on preventing Earth's first contact with an alien species. Captain Picard and his crew pursue them to ensure that Zefram Cochrane makes his maiden flight reaching warp speed."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Invalid query parameters. Click on 'Schema' to see possible error responses.",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid query parameters: year. Query parameters are not permitted."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "The requested movie could not be found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "No record exists of a movie with this ID"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "Internal server error",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "boolean",
+                            "enum": [
+                              true
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Error in MySQL query"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+        "/user/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh Token",
+                "description": "Generates a new access token using a valid refresh token.",
+                "operationId": "refreshToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string",
+                                        "example": "ajsonwebtoken"
+                                    }
+                                },
+                                "required": [
+                                    "refreshToken"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token successfully refreshed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bearerToken": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "refreshToken": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "bearerToken": {
+                                        "token": "ajsonwebtoken",
+                                        "token_type": "Bearer",
+                                        "expires_in": 600
+                                    },
+                                    "refreshToken": {
+                                        "token": "ajsonwebtoken",
+                                        "token_type": "Refresh",
+                                        "expires_in": 86400
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid refresh request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "ajsonwebtoken"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": true,
+                                    "message": "Request body incomplete, refresh token required"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Click on 'Schema' below to see the possible error responses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "JWT token has expired"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login",
+                "description": "Logs in a user and generates access and refresh tokens.",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "mike@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "longExpiry": {
+                                        "type": "bool",
+                                        "example": false
+                                    },
+                                    "bearerExpiresInSeconds": {
+                                        "type": "integer",
+                                        "example": "600"
+                                    },
+                                    "refreshExpiresInSeconds": {
+                                        "type": "integer",
+                                        "example": "86400"
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Log in successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bearerToken": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "refreshToken": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "bearerToken": {
+                                        "token": "ajsonwebtoken",
+                                        "token_type": "Bearer",
+                                        "expires_in": 600
+                                    },
+                                    "refreshToken": {
+                                        "token": "ajsonwebtoken",
+                                        "token_type": "Refresh",
+                                        "expires_in": 86400
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid log in request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": true,
+                                    "message": "Request body incomplete, both email and password are required"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Log in failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Incorrect email or password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "Error": {
+                                  "type": "boolean",
+                                  "enum": [
+                                    true
+                                  ]
+                                },
+                                "Message": {
+                                  "type": "string",
+                                  "example": "Error in MySQL query"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                }
+            }
+        },
+        "/user/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout",
+                "description": "Invalidates the refresh token and logs out the user.",
+                "operationId": "logoutUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string",
+                                        "example": "ajsonwebtoken"
+                                    }
+                                },
+                                "required": [
+                                    "refreshToken"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token successfully invalidated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                false
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": false,
+                                    "message": "Token successfully invalidated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid refresh request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": true,
+                                    "message": "Request body incomplete, refresh token required"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "JWT token has expired"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a user",
+                "description": "Will add a user to the user Database",
+                "operationId": "Register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "mike@gmail.com",
+                                    "password": "password",
+                                    "longExpiry": false,
+                                    "bearerExpiresInSeconds": 600,
+                                    "refreshExpiresInSeconds": 86400
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Request body incomplete, both email and password are required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "enum": [
+                                                true
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User already exists"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "Error": {
+                                  "type": "boolean",
+                                  "enum": [
+                                    true
+                                  ]
+                                },
+                                "Message": {
+                                  "type": "string",
+                                  "example": "Error in MySQL query"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                }
+            }
+        }
+    }
+}
